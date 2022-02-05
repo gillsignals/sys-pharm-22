@@ -27,7 +27,7 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 % the following arguments:
 %   the name of the equations function (m1C_eqns)
 %   the time limits (0-10 hrs) 
-%   initial conditions (y)
+%   initial conditions (y0)
 %   ODE solver options (options)
 %   parameter array (p) - note that this (and any other arguments you add after it)
 %      gets passed through the solver into the equations function
