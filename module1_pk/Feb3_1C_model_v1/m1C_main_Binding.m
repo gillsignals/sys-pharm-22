@@ -84,10 +84,10 @@ title(ax2,'Concentration of B')
 ylabel(ax2,'[D] (nM)')
 xlabel(ax2,'time (hrs)')
 % lgd = legend('1', '2', '3');
-% lgd.Location = 'northwest';
+% lgd.Location = 'southwest';
 % lgd.Title.String = ['infusion rate' newline 'q (nmol/hr)'];
 % lgd = legend('.1', '0.01', '0.001');
-% lgd.Location = 'northwest';
+% lgd.Location = 'southwest';
 % lgd.Title.String = ['AB clearance' newline 'rate constant' newline 'kcAB (hr^-^1)'];
 lgd = legend('0.01', '0.1', '0.001');
 lgd.Location = 'southwest';
