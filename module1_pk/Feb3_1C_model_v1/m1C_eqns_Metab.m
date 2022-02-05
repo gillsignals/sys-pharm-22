@@ -33,7 +33,7 @@ kab=p(5); % conversion rate constant for molecule A to molecule B
 %% EQUATIONS
 % initialize dydt to be the right size
 % make it a column vector, i.e. (n,1) where n = number of equations
-dydt = zeros(2,1);    % make it a column vector (e.g. (2,1))
+dydt = zeros(2,1);    
 
 % for metabolism, assume first order reaction 
 %   (see low substrate concentration assumption of Michaelis-Menten)
