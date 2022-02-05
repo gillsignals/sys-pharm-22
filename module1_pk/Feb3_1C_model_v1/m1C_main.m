@@ -62,6 +62,8 @@ xlabel(ax1,'time (hrs)')
 lgd = legend('1', '2', '3');
 lgd.Location = 'northeast';
 lgd.Title.String = ['infusion rate' newline 'q (nmol/hr)'];
+% lgd.Title.String = ['Volume' newline 'V (L)'];
+% lgd.Title.String = ['clearance' newline 'rate constant' newline 'k (1/hr)'];
 
 ax2=subplot(1,2,2);
 plot(ax2,T1,TotalD1(:,1),'k',T2,TotalD2(:,1),'b',T3,TotalD3(:,1),'r','linewidth',3)
@@ -71,4 +73,5 @@ xlabel(ax2,'time (hrs)')
 lgd = legend('1', '2', '3');
 lgd.Location = 'northeast';
 lgd.Title.String = ['infusion rate' newline 'q (nmol/hr)'];
-
+% lgd.Title.String = ['Volume' newline 'V (L)'];
+% lgd.Title.String = ['clearance' newline 'rate constant' newline 'k (1/hr)'];
