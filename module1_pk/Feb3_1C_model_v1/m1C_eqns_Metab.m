@@ -14,9 +14,9 @@ function dydt = m1C_eqns_Metab(t,y,p)
 %% ARGUMENTS
 % t = current time (this is passed from the ODE solver to here)
 % y = current value of the concentrations (this is passed from the ode 
-% solver to here; this will have three elements, one for each molecule)
+%  solver to here; this will have two elements, one for each molecule)
 % p = vector of parameters (we define this in our main code, and pass
-% it to the ODE solver, which passes it to this function)
+%  it to the ODE solver, which passes it to this function)
 
 %% PARAMETERS
 %
