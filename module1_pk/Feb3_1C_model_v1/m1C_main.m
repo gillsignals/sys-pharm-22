@@ -2,16 +2,17 @@ clear all;
 % Toy Model (i.e. generic model not specific to an actual drug):
 %  specifically here, a one-compartment model with infusion and clearance
 
-%% DEFINE PARAMETERS
+%% DEFINE PARAMETER VALUES
 q = 1; % nmol/hr (drug input - continuous infusion)
 V = 1; % L (compartment volume)
 k = 1; % hr-1 (rate constant for elimination)
 
 % intial conditions (concentrations); y0 is a vector if multiple equations 
-y0 = 0; % nM; 
+y0 = 0; % nM 
 
 % Assemble parameters into a vector, to simplify passing the values to the solver
-p = [q V k]'; % note that the order of the parameters here needs to be consistent with the order in the eqns file
+% note that the order of the parameters here needs to be consistent with the order in the eqns file
+p = [q V k]'; 
 
 % assign some options values for the solver
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
@@ -31,7 +32,7 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 %   parameter array (p) - note that this (and any other arguments you add after it)
 %      gets passed through the solver into the equations function
 % the ode45 function returns two things:
-%   T1 = the vector of timesteps at which concentrations are returned to us
+%   T1 = the vector of timesteps for which concentrations are returned to us
 %   Y1 = the vector of concentrations at each timestep of T1
 %        (if there are multiple equations, Y1 will have multiple columns)
 
@@ -50,7 +51,7 @@ p = [q V k]'; % the vector p doesn't automatically update, need to reassign upda
 [T3,Y3] = ode45(@m1C_eqns,[0 10],y0,options,p);
 TotalD3 = Y3*V ;
 
-%% Plot results
+%% VISUALIZE RESULTS
 
 figure;
 ax1=subplot(1,2,1);
