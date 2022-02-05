@@ -1,6 +1,10 @@
 function dydt = m1C_eqns(t,y,p)
-% This function defines equations to simulate a 'toy model'
-% (i.e. a model that doesn't represent a specific drug).
+% This function defines equations to simulate a one-compartment model
+% of one molecule - a drug delivered by infusion that can be cleared by a
+% first-order process. In other words, the drug only undergoes two processes
+% (infusion and clearance) and therefore only two rate terms appear in the 
+% single equation. 
+%
 % Our main code doesn't call this eqns function directly; 
 % it calls an ODE solver, which then calls this function. 
 %
