@@ -19,7 +19,7 @@ y0 = [0 100 0]'; % nM ([A B AB])
 
 % Assemble parameters into a vector, to simplify passing the values to the solver
 % note that the order of the parameters here needs to be consistent with the order in the eqns file
-p = [q V kc1 kc2 kc3 kab kba]';
+p = [q V kcA kcB kcAB kon koff]';
 
 % assign some options values for the solver
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
@@ -48,7 +48,7 @@ TotalD1 = Y1*V ;
 % q = 2;
 % kcAB = .01;
 kon = .1; 
-p = [q V kc1 kc2 kc3 kab kba]'; % the vector p doesn't automatically update, need to reassign updated values to it
+p = [q V kcA kcB kcAB kon koff]'; % the vector p doesn't automatically update, need to reassign updated values to it
 [T2,Y2] = ode45(@m1C_eqns_Binding,[0 10],y0,options,p);
 TotalD2 = Y2*V ;
 
@@ -56,7 +56,7 @@ TotalD2 = Y2*V ;
 % q = 3;
 % kcAB = .001;
 kon = .001; 
-p = [q V kc1 kc2 kc3 kab kba]'; % the vector p doesn't automatically update, need to reassign updated values to it
+p = [q V kcA kcB kcAB kon koff]'; % the vector p doesn't automatically update, need to reassign updated values to it
 [T3,Y3] = ode45(@m1C_eqns_Binding,[0 10],y0,options,p);
 TotalD3 = Y3*V ;
 
@@ -68,13 +68,13 @@ plot(ax1,T1,Y1(:,1),'k',T1,Y1(:,3),'k-.',T2,Y2(:,1),'b',T2,Y2(:,3),'b-.',T3,Y3(:
 title(ax1,'Concentration of A(---),AB(- -)')
 ylabel(ax1,'[D] (nM)')
 xlabel(ax1,'time (hrs)')
-% lgd = legend('1', '2', '3');
+% lgd = legend('1 (A)', '1 (AB)', '2 (A)',  '2 (AB)', '3 (A)', '3 (AB)');
 % lgd.Location = 'northwest';
 % lgd.Title.String = ['infusion rate' newline 'q (nmol/hr)'];
-% lgd = legend('.1', '0.01', '0.001');
+% lgd = legend('0.1 (A)', '0.1 (AB)', '0.01 (A)',  '0.01 (AB)', '0.001 (A)', '0.001 (AB)');
 % lgd.Location = 'northwest';
 % lgd.Title.String = ['AB clearance' newline 'rate constant' newline 'kcAB (hr^-^1)'];
-lgd = legend('0.01', '0.1', '0.001');
+lgd = legend('0.01 (A)', '0.01 (AB)', '0.1 (A)',  '0.1 (AB)', '0.001 (A)', '0.001 (AB)');
 lgd.Location = 'northwest';
 lgd.Title.String = ['A-B binding' newline 'rate constant' newline 'kon (nM^-^1 hr^-^1)'];
 
@@ -90,7 +90,7 @@ xlabel(ax2,'time (hrs)')
 % lgd.Location = 'northwest';
 % lgd.Title.String = ['AB clearance' newline 'rate constant' newline 'kcAB (hr^-^1)'];
 lgd = legend('0.01', '0.1', '0.001');
-lgd.Location = 'northwest';
+lgd.Location = 'southwest';
 lgd.Title.String = ['A-B binding' newline 'rate constant' newline 'kon (nM^-^1 hr^-^1)'];
 
 ax3=subplot(2,2,3);
