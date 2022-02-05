@@ -25,11 +25,13 @@ function dydt = m1C_eqns(t,y,p)
 % the array p, so the next 3 lines are a way to assign those 3 values to
 % named parameters and therefore make the equation(s) below easier to read
 % and easier to check/debug. Take care with the order of the values in p.
-
-q=p(1); % gather the parameters from p.
-V=p(2); % there are easier ways to do this, we've written it this way 
-k=p(3); % to emphasize the concept of passing parameters;
+%
+% There are other ways to do this, we've written it this way 
+% to emphasize the concept of passing parameters between functions; 
 % later we'll demonstrate other ways to do this
+q=p(1); % infusion rate
+V=p(2); % volume
+k=p(3); % clearance rate constant
 
 %% EQUATIONS
 % initialize dydt to be the right size
