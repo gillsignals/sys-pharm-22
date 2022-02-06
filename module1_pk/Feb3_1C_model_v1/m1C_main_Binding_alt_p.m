@@ -1,25 +1,39 @@
 clear all;
 % Toy Model (i.e. generic model not specific to an actual drug):
 %  specifically here, a one-compartment model with continuous infusion, 
-% binding to plasma protein, and different clearance rates for three molecules
+%  binding to plasma protein, and different clearance rates for three molecules
 
-%% DEFINE PARAMETER VALUES
-q = 1; % nmol/hr (drug input - continuous infusion)
-V = 1; % L (compartment volume)
-kcA = .1; % hr-1 (rate constant for elimination of molecule A)
-kcB = 0; % hr-1 (rate constant for elimination of molecule B)
-kcAB = .1; % hr-1 (rate constant for elimination of molecule AB)
-kon = .01; % nM-1 hr-1 (on-rate constant of A binding B)
-koff = .1; % hr-1 (off-rate constant of A dissociating from B)
+% Here we show how to use a structure for parameters instead of passing a
+% vector of values
+
+%% Define parameters
+
+% instead of defining each parameter as a separate variable...
+% q = 1; % nmol/hr (drug input - continuous infusion)
+% V = 1; % L (compartment volume)
+% kcA = .1; % hr-1 (rate constant for elimination of molecule A)
+% kcB = 0; % hr-1 (rate constant for elimination of molecule B)
+% kcAB = .1; % hr-1 (rate constant for elimination of molecule AB)
+% kon = .01; % nM-1 hr-1 (on-rate constant of A binding B)
+% koff = .1; % hr-1 (off-rate constant of A dissociating from B)
+
+% ...we can define a structure p of which each parameter is an element:
+p.q = 1; % nmol/hr (drug input - continuous infusion)
+p.V = 1; % L (compartment volume)
+p.kcA = .1; % hr-1 (rate constant for elimination of molecule A)
+p.kcB = 0; % hr-1 (rate constant for elimination of molecule B)
+p.kcAB = .1; % hr-1 (rate constant for elimination of molecule AB)
+p.kon = .01; % nM-1 hr-1 (on-rate constant of A binding B)
+p.koff = .1; % hr-1 (off-rate constant of A dissociating from B)
 
 % intial conditions (concentrations)
 %   three molecules => three equations => three initial concentrations
 %   order of elements is the same as order of equations
 y0 = [0 100 0]'; % nM ([A B AB])
 
-% Assemble parameters into a vector, to simplify passing the values to the solver
-% note that the order of the parameters here needs to be consistent with the order in the eqns file
-p = [q V kcA kcB kcAB kon koff]';
+% now we don't need to assemble the parameters into a vector (but
+% everything else is basically the same!)
+% p = [q V kcA kcB kcAB kon koff]';
 
 % assign some options values for the solver
 options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e-2);
@@ -27,14 +41,17 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 %% RUN SIMULATIONS
 
 % first simulation (based on parameter values set above)
-[T1,Y1] = ode45(@m1C_eqns_Binding,[0 10],y0,options,p);
+% NOTE that p is still passed, but now is a structure instead of a vector;
+% it's still being passed to the solver (ode45), which will in turn pass it
+% to the equations function when it repeatedly calls that function
+[T1,Y1] = ode45(@m1C_eqns_Binding_alt_p,[0 10],y0,options,p);
 % calling the solver (in this case, ode45); to the solver, we pass
 % the following arguments:
-%   the name of the equations function (m1C_eqns_Binding)
+%   the name of the equations function (m1C_eqns_Binding_alt_p)
 %   the time limits (0-10 hrs) 
 %   initial conditions (y0)
 %   ODE solver options (options)
-%   parameter array (p) - note that this (and any other arguments you add after it)
+%   parameter set (p) - note that this (and any other arguments you add after it)
 %      gets passed through the solver into the equations function
 % the ode45 function returns two things:
 %   T1 = the vector of timesteps for which concentrations are returned to us
@@ -42,25 +59,28 @@ options = odeset('MaxStep',5e-2, 'AbsTol', 1e-5,'RelTol', 1e-5,'InitialStep', 1e
 %        (since there are multiple equations, Y1 will have multiple columns)
 
 % convert concentration to amount (nM -> nmoles)
-TotalD1 = Y1*V ;
+TotalD1 = Y1*p.V ;
 
-% second simulation - change parameter values, run solver again
-% q = 2;
-% kcAB = .01;
-kon = .1; 
-p = [q V kcA kcB kcAB kon koff]'; % the vector p doesn't automatically update, need to reassign updated values to it
-[T2,Y2] = ode45(@m1C_eqns_Binding,[0 10],y0,options,p);
-TotalD2 = Y2*V ;
+% second simulation - change values, run solver again
+% p.q = 2;
+% p.kcAB = .01;
+p.kon = .1;
 
-% third simulation - change parameter values, run solver again
-% q = 3;
-% kcAB = .001;
-kon = .001; 
-p = [q V kcA kcB kcAB kon koff]'; % the vector p doesn't automatically update, need to reassign updated values to it
-[T3,Y3] = ode45(@m1C_eqns_Binding,[0 10],y0,options,p);
-TotalD3 = Y3*V ;
+% because we updated the element of p directly, 
+% we no longer need to re-assign values of p; p is already updated
+% p = [q V kcA kcB kcAB kon koff]'; 
 
-%% VISUALIZE RESULTS
+[T2,Y2] = ode45(@m1C_eqns_Binding_alt_p,[0 10],y0,options,p);
+TotalD2 = Y2*p.V ;
+
+% third simulation - change values, run solver again
+% p.q = 3;
+% p.kcAB = .001;
+p.kon = 0.001;
+[T3,Y3] = ode45(@m1C_eqns_Binding_alt_p,[0 10],y0,options,p);
+TotalD3 = Y3*p.V ;
+
+%% Visualize results
 
 figure;
 ax1=subplot(2,2,1);

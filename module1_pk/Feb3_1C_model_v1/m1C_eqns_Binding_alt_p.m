@@ -1,4 +1,4 @@
-function dydt = m1C_eqns_Binding(t,y,p)
+function dydt = m1C_eqns_Binding_alt_p(t,y,p)
 % This function defines equations to simulate a one-compartment model
 % with a drug (A), a plasma protein to which the drug can bind (B), and the 
 % drug-protein complex (AB). All three molecules can undergo clearance. 
@@ -16,27 +16,27 @@ function dydt = m1C_eqns_Binding(t,y,p)
 % t = current time (this is passed from the ODE solver to here)
 % y = current value of the concentrations (this is passed from the ode 
 %  solver to here; this will have three elements, one for each molecule)
-% p = vector of parameters (we define this in our main code, and pass
+% p = structured parameter set (we define this in our main code, and pass
 %  it to the ODE solver, which passes it to this function)
 
-%% PARAMETERS
+
+%% Parameters
 %
-% The parameters needed for the equation are passed to this function in 
-% the array p, so the next 7 lines are a way to assign those 7 values to
-% named parameters and therefore make the equation(s) below easier to read
-% and easier to check/debug. Take care with the order of the values in p.
-q=p(1); % infusion rate
-V=p(2); % volume
-kcA=p(3); % clearance rate constant for molecule A
-kcB=p(4); % clearance rate constant for molecule B
-kcAB=p(5); % clearance rate constant for molecule AB
-kon=p(6);  % 'on rate' = forward rate constant for A binding B
-koff=p(7); % 'off rate' = reverse rate constant for A unbinding B
+% This part is obsolete since we are importing p as a structure with named
+% elements instead of as a vector of values
+% q=p(1);
+% V=p(2);
+% kcA=p(3);
+% kcB=p(4);
+% kcAB=p(5);
+% kon=p(6);
+% koff=p(7);
+
 
 %% EQUATIONS
 % initialize dydt to be the right size
 % make it a column vector, i.e. (n,1) where n = number of equations
-dydt = zeros(3,1);  
+dydt = zeros(3,1);    
 
 % List of equations. Equation (1) is the ODE associated with the
 % concentration of molecule (1); y(1) is the concentration of molecule (1).
@@ -47,10 +47,11 @@ dydt = zeros(3,1);
 % Also, note how appropriate spacing makes it easy 
 % to see the symmetry across the various equations
 
-dydt(1) = q/V - kcA*y(1)  - kon*y(1)*y(2) + koff*y(3); % dA/dt
-dydt(2) =     - kcB*y(2)  - kon*y(1)*y(2) + koff*y(3); % dB/dt
-dydt(3) =     - kcAB*y(3) + kon*y(1)*y(2) - koff*y(3); % dAB/dt
-
+ dydt(1) = p.q/p.V - p.kcA*y(1)  - p.kon*y(1)*y(2) + p.koff*y(3); %A
+ dydt(2) =         - p.kcB*y(2)  - p.kon*y(1)*y(2) + p.koff*y(3); %B
+ dydt(3) =         - p.kcAB*y(3) + p.kon*y(1)*y(2) - p.koff*y(3); %AB
+ 
+ 
 %% Alternate way of writing/organizing equations:
 % In the equations above, we calculate the various rates in each equation, 
 % even though some of the rates are the same. Instead, we can calculate 
@@ -65,11 +66,13 @@ dydt(3) =     - kcAB*y(3) + kon*y(1)*y(2) - koff*y(3); % dAB/dt
 %  uncomment the four equations below to try it out 
 %  and check that you get the same answers:
 %
-%  r_binding = kon*y(1)*y(2) - koff*y(3);
+%  r_binding = p.kon*y(1)*y(2) - p.koff *y(3);
 %
-%  dydt(1) = q/V - kcA*y(1)  - r_binding; % dA/dt
-%  dydt(2) =     - kcB*y(2)  - r_binding; % dB/dt
-%  dydt(3) =     - kcAB*y(3) + r_binding; % dAB/dt
+%  dydt(1) = p.q/p.V - p.kcA*y(1)  - r_binding; %A
+%  dydt(2) =         - p.kcB*y(2)  - r_binding; %B
+%  dydt(3) =         - p.kcAB*y(3) + r_binding; %AB
 
 % In some codes we may encounter, lower case 'v' is used instead of 'r' to
 % denote rate; v stands for velocity, an alternate term for rate
+ 
+
