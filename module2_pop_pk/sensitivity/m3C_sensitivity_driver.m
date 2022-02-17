@@ -167,7 +167,7 @@ xlabel('Time (hr)')
     bar(SensB);
 	ax = gca; % assign a handle (ax) for the current axes
     ax.FontSize = 14;
-    ylabel({'Relative sensitivity of AUC';'(dY/dP)'})
+    ylabel({'Absolute sensitivity of AUC';'(dY/dP)'})
     xlabel('Parameters')
     xticks([1:1:length(p0)])
     xticklabels(p0labels);
